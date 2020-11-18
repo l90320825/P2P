@@ -1,1 +1,161 @@
 """ Add your Client class from your TCP assignment here """
+
+# copy and paste your code from your client.py file
+########################################################################################################################
+# Class: Computer Networks
+# Date: 02/03/2020
+# Lab3: TCP Client Socket
+# Goal: Learning Networking in Python with TCP sockets
+# Student Name:
+# Student ID:
+# Student Github Username:
+# Instructions: Read each problem carefully, and implement them correctly.  No partial credit will be given.
+########################################################################################################################
+
+
+from pwp import PWP 
+from torrent import Torrent
+import socket
+import pickle
+
+
+
+######################################## Client Socket ###############################################################3
+"""
+Client class that provides functionality to create a client socket is provided. Implement all the TODO parts 
+"""
+
+class Client(object):
+
+    def __init__(self, torrent, announce, tracker, peerid, host="127.0.0.1", port = 12000):
+        """
+        Class constructor
+        """
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.host = host
+        self.port = port
+        self.tracker = tracker
+        self.client_id = None
+        self.student_name = "John To" # TODO: your name
+        self.github_username = "l90320825" # TODO: your username
+        self.sid = 917507752 # TODO: your student id
+        self.announce = announce
+        self.torrent = torrent
+        self.peerid = peerid
+        self.pwp = PWP(self.peerid, self.torrent.info_hash())
+
+
+
+    def connect(self, server_ip_address, server_port):
+        """
+        TODO: Create a connection from client to server
+        :param server_ip_address:
+        :param server_port:
+        :return:
+        """
+        #TODO: 1. use the self.client to create a connection with the server
+       
+        self.client.connect((server_ip_address, server_port))
+         
+
+        #TODO: 2. once the client creates a successful connection, the server will send the client id to this client.
+        #      call the method set_client_id() to implement that functionality.
+
+        self.set_client_id()
+
+        # data dictionary already created for you. Don't modify.
+        #data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
+        print("Handshaking")
+        data = self.pwp.get_handshake()
+        #print(data)
+
+        #TODO  3. send the above data to the server. using the send method which has been already implemented for you.
+
+        self.send(data)
+
+        while True: # client is put in listening mode to retrieve data from server.
+            data = self.receive()
+            if not data:
+                break
+            print(data)
+            # do something with the data
+        self.close()
+
+    def send(self, data):
+        """
+        Serializes and then sends data to server
+        :param data:
+        :return:
+        """
+        data = pickle.dumps(data) # serialized data
+        self.client.send(data)
+
+    def receive(self, MAX_BUFFER_SIZE=4090):
+        """
+        Desearializes the data received by the server
+        :param MAX_BUFFER_SIZE: Max allowed allocated memory for this data
+        :return: the deserialized data.
+        """
+        
+        raw_data = self.client.recv(MAX_BUFFER_SIZE) # deserializes the data from server
+        return pickle.loads(raw_data)
+
+    def set_client_id(self):
+        """
+        Sets the client id assigned by the server to this client after a succesfull connection
+        :return:
+        """
+        data = self.receive() # deserialized data
+        client_id = data['clientid'] # extracts client id from data
+        self.client_id = client_id # sets the client id to this client
+        print("Client id " + str(self.client_id) + " assigned by server")
+
+    def close(self):
+        """
+        TODO: close this client
+        :return: VOID
+        """
+        self.client.close()
+
+    def _bind(self):
+        """
+        # TODO: bind host and port to this server socket
+        :return: VOID
+        """
+
+        self.serversocket.bind((self.host, self.port))
+        #self.serversocket.listen(10)
+        while True:
+            message, clientAddress = self.serversocket.recvfrom(2048)
+            print("Client recieve")
+            print(clientAddress)
+            message = pickle.loads(message)
+            print(message)
+            entry = {'nodeID': message['nodeId'], 'ip_address': message['ip'], 'port': message['port'], 'info_hash': message['info_hash'], 'last_changed': 'timestamp' }
+            print(entry)
+            self.tracker._routing_table_add(message['info_hash'], entry)
+            self.connect(message['ip'], 5000)
+
+
+
+    def run(self):
+        if(self.announce == True):
+            print("Create DHT")
+            self._bind()
+        else:
+            self.client.bind((self.host, self.port))
+            self.connect("127.0.0.1", 5000)
+
+# main execution
+if __name__ == '__main__':
+    server_ip_address = "127.0.0.1"  # don't modify for this lab only
+    server_port = 12000 # don't modify for this lab only
+    #client = Client(False)
+    #client.connect(server_ip_address, server_port)
+
+# How do I know if this works?
+# when this client connects, the server will assign you a client id that will be printed in the client console
+# Your server must print in console all your info sent by this client
+# See README file for more details
+
