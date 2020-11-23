@@ -41,18 +41,9 @@ class Server(object):
         """
         self.host = host
         self.port = port
-        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # TODO: create the server socket
-        self.client_handlers = {} # initializes client_handlers list
-
-    def _bind(self):
-        """
-        # TODO: bind host and port to this server socket
-        :return: VOID
-        """
-
+        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TODO: create the server socket
+        self.client_handlers = {}  # initializes client_handlers list
         self.serversocket.bind((self.host, self.port))
-
-    
 
     def _listen(self):
         """
@@ -78,33 +69,32 @@ class Server(object):
         """
 
         client_id = addr[1]
-        self._send_clientid(clienthandler, client_id)
         print(addr[1])
-        self.receive(clienthandler)
+        # Create Client Handler?
+        data = self.receive(clienthandler)
+        # P2P Server stuff
+        while True:
+            data = self.receive(clienthandler)
+            if not data:
+                print("Bad Input")
+                break
+            # Do Stuff with Data
+        clienthandler.close()
+
+
         #self.receive(clienthandler)
         #client_handler = ClientHandler(self, clienthandler, addr)
         #client_handler.run()
-
-
         #self.client_handlers[client_id] = client_handler
         #print(self.client_handlers)
-       
-       
-
-        
-
-            
-
         #print("self.receive(clienthandler)")
-
              # creates a stream of bytes
         #self.send(clienthandler, "server got the data")
-            
-            
              # TODO: receive data from client
              # TODO: if no data, break the loop
              # TODO: Otherwise, send acknowledge to client. (i.e a message saying 'server got the data
               # remove this line after implemented.
+
 
     def _accept_clients(self):
         """
@@ -114,6 +104,8 @@ class Server(object):
         while True:
             try:
                clienthandler, addr = self.serversocket.accept()
+               client_id = {'clientid': addr[1]}
+               self._send_clientid(clienthandler, client_id)
                print("Server recev")
                print(addr)
                Thread(target=self.threaded_client, args=(clienthandler, addr)).start() 
@@ -134,8 +126,7 @@ class Server(object):
         :return: VOID
         """
         data = {'clientid': clientid}
-        serialized_data = pickle.dumps(data)
-        clienthandler.send(serialized_data)
+        self.send(clienthandler, data)
           
 
 
@@ -159,15 +150,20 @@ class Server(object):
         :param MAX_BUFFER_SIZE:
         :return: the deserialized data
         """
-        while True:
-            raw_data = clientsocket.recv(MAX_BUFFER_SIZE)
-            if not raw_data:
-                break
-            data = pickle.loads(raw_data)
-            print(data)
-            return data
+        # while True:
+        #     raw_data = clientsocket.recv(MAX_BUFFER_SIZE)
+        #     if not raw_data:
+        #         break
+        #     data = pickle.loads(raw_data)
+        #     print(data)
+        #     return data
+        #
+        # return pickle.loads(raw_data)
 
-        return pickle.loads(raw_data)
+        raw_data = clientsocket.recv(MAX_BUFFER_SIZE)
+        data = pickle.loads(raw_data)
+        return data
+
 
     def run(self):
         """

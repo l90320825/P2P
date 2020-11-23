@@ -88,8 +88,8 @@ class Client(object):
         :param data:
         :return:
         """
-        data = pickle.dumps(data) # serialized data
-        self.client.send(data)
+        serialized_data = pickle.dumps(data) # serialized data
+        self.client.send(serialized_data)
 
     def receive(self, MAX_BUFFER_SIZE=4090):
         """
