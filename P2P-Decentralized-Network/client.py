@@ -13,8 +13,8 @@
 ########################################################################################################################
 
 
-from pwp import PWP 
 from torrent import Torrent
+from message import Message
 import socket
 import pickle
 
@@ -32,18 +32,15 @@ class Client(object):
         Class constructor
         """
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        #self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.host = host
         self.port = port
         self.tracker = tracker
         self.client_id = None
-        self.student_name = "John To" # TODO: your name
-        self.github_username = "l90320825" # TODO: your username
-        self.sid = 917507752 # TODO: your student id
         self.announce = announce
         self.torrent = torrent
         self.peerid = peerid
-        self.pwp = PWP(self.peerid, self.torrent.info_hash())
+        self.message = Message() #Send message
 
 
 
@@ -67,18 +64,31 @@ class Client(object):
         # data dictionary already created for you. Don't modify.
         #data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
         print("Handshaking")
-        data = self.pwp.get_handshake()
+        data = self.message.handshake
+        data['info_hash'] = self.torrent.info_hash()
+        data['peer_id'] = self.peerid
         #print(data)
 
         #TODO  3. send the above data to the server. using the send method which has been already implemented for you.
 
         self.send(data)
 
+        data = self.receive()
+
+        print(data)
+
+        data = self.message.interested #Tell server client is interested to download
+
+        self.send(data)
+
+
         while True: # client is put in listening mode to retrieve data from server.
             data = self.receive()
             if not data:
                 break
             print(data)
+            #data = self.message.interested
+
             # do something with the data
         self.close()
 
@@ -118,11 +128,16 @@ class Client(object):
         """
         self.client.close()
 
+    def run(self):
+        self.client.bind((self.host, self.port))
+        self.connect("127.0.0.1", 5000)
+
+"""
     def _bind(self):
-        """
+        
         # TODO: bind host and port to this server socket
         :return: VOID
-        """
+        
 
         self.serversocket.bind((self.host, self.port))
         #self.serversocket.listen(10)
@@ -137,15 +152,11 @@ class Client(object):
             self.tracker._routing_table_add(message['info_hash'], entry)
             self.connect(message['ip'], 5000)
 
+            """
 
 
-    def run(self):
-        if(self.announce == True):
-            print("Create DHT")
-            self._bind()
-        else:
-            self.client.bind((self.host, self.port))
-            self.connect("127.0.0.1", 5000)
+
+    
 
 # main execution
 if __name__ == '__main__':

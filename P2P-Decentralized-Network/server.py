@@ -52,7 +52,7 @@ class Server(object):
         :return: VOID
         """
         try:
-            self._bind()
+           
             self.serversocket.listen(MAX_NUM_CONN)
             print("Listening at " + self.host + "/" + str(self.port))
             
@@ -70,14 +70,20 @@ class Server(object):
 
         client_id = addr[1]
         print(addr[1])
+        self.send(clienthandler, "Server recived")
         # Create Client Handler?
         data = self.receive(clienthandler)
+
+        print(data)
+
+
         # P2P Server stuff
         while True:
             data = self.receive(clienthandler)
             if not data:
                 print("Bad Input")
                 break
+            print(data)
             # Do Stuff with Data
         clienthandler.close()
 

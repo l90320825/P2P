@@ -159,7 +159,7 @@ class Tracker:
 
     def _routing_table_add(self, node):
         i = 0
-        infohash = self.torrent_info_hash
+        infohash = self.torrent.info_hash
         infohash = infohash[:20]
         Alist = self._routing_table[infohash]
         for item in Alist:
@@ -367,5 +367,5 @@ class Tracker:
         node = (self.server.host, str(self.server.port))
 
         infohash = self._get_torrent_info_hash()
-        self._routing_table[infohash] = []
-        self._routing_table[infohash].append(node)
+        #self._routing_table[infohash] = []
+        #self._routing_table[infohash].append(node)

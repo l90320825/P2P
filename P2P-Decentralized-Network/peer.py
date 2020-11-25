@@ -42,7 +42,7 @@ class Peer:
     LEECHER = 'leecher'
     SEEDER = 'seeder'
 
-    def __init__(self, role=SEEDER, server_ip_address='127.0.0.1'):
+    def __init__(self, role=PEER, server_ip_address='127.0.0.2'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
         """
         Class constructor
         :param server_ip_address: used when need to use the ip assigned by LAN
@@ -54,6 +54,7 @@ class Peer:
         self.role = role
         self.torrent = Torrent("age.torrent")
         self.tracker = None
+        self.swarm = [('127.0.0.1', 5000), ('127.0.0.2', 5000)] #Test
         
 
     def run_server(self):
@@ -92,6 +93,8 @@ class Peer:
                 #Thread(target=self.tracker.run, daemon=False).start()
                 #print("Tracker running.....")
 
+            if self.role != 'seeder': #Seeder does not need client to download
+
                 self.client = Client(self.torrent, announce, self.tracker, str(self.id),  self.server_ip_address, 5001)
                 Thread(target=self.client.run, daemon=False).start()
                 print("Client started.........")
@@ -106,7 +109,8 @@ class Peer:
 # main execution
 if __name__ == '__main__':
     # testing
-    peer = Peer(role='peer')
+    #peer = Peer(role='peer')
+    peer = Peer()
     print("Peer: " + str(peer.id) + " started....")
     peer.run_server()
     #print("test")
