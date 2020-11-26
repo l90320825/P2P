@@ -81,6 +81,15 @@ class Client(object):
 
         self.send(data)
 
+        data = self.message.request
+        data['index'] = 0
+        data['begin'] = 0
+        data['length'] = self.torrent.block_size()
+
+        self.send(data)
+
+
+
 
         while True: # client is put in listening mode to retrieve data from server.
             data = self.receive()

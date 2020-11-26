@@ -4,7 +4,8 @@ from file_manager import FileManager
 
 class Downloader:
 
-    def __init__(self, peer_downloader, peer_id, torrent, pwp, interested, keep_alive):
+    def __init__(self, peer_downloader, peer_id, torrent, pwp, interested, keep_alive, client):
+        self.client = client
         self.peer_downloader = peer_downloader
         self.peer_id = peer_id
         self.torrent = torrent
@@ -16,4 +17,10 @@ class Downloader:
         self.file_manager = FileManager(self.torrent, self.peer_id)
         self.bitfield_lock = threading.Lock()
         self.file_lock = threading.Lock()
+
+
+
+    def run(self):
+        while True:
+            data = self.client.receive()
 

@@ -76,6 +76,10 @@ class Server(object):
 
         print(data)
 
+        data = self.receive(clienthandler)
+
+        print(data)
+
 
         # P2P Server stuff
         while True:
