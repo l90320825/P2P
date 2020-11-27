@@ -152,8 +152,13 @@ class Client(object):
         self.client.close()
 
     def run(self):
+
         self.client.bind(("", self.port)) #connect to different pc, change to 127.0.0.1 if localhost
         self.connect("10.0.0.246", 5000)#Test
+
+      #  self.client.bind(("", self.port))
+    #    self.connect("172.20.176.1", 5000)
+
 
 """
     def _bind(self):
