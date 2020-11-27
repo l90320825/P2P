@@ -43,6 +43,7 @@ class Server(object):
         self.port = port
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TODO: create the server socket
         self.client_handlers = {}  # initializes client_handlers list
+       # self.serversocket.bind((self.host, self.port))
         self.serversocket.bind((self.host, self.port))
 
     def _listen(self):
@@ -54,6 +55,9 @@ class Server(object):
         try:
            
             self.serversocket.listen(MAX_NUM_CONN)
+
+            print(socket.gethostbyname(socket.gethostname()))
+            
             print("Listening at " + self.host + "/" + str(self.port))
             
             # your code here

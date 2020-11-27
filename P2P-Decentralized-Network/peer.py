@@ -42,7 +42,8 @@ class Peer:
     LEECHER = 'leecher'
     SEEDER = 'seeder'
 
-    def __init__(self, role=PEER, server_ip_address='127.0.0.2'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
+    #def __init__(self, role=PEER, server_ip_address='172.20.176.1'): DIFFERENT computer
+    def __init__(self, role=PEER, server_ip_address='172.20.176.1'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
         """
         Class constructor
         :param server_ip_address: used when need to use the ip assigned by LAN
