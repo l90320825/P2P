@@ -17,6 +17,8 @@ import socket
 import pickle
 #from client_handler import ClientHandler
 from threading import Thread
+from uploader import Uploader
+from torrent import Torrent
 
 
 MAX_NUM_CONN = 10
@@ -33,7 +35,7 @@ class Server(object):
     """
     MAX_NUM_CONN = 10 # keeps 10 clients in queue
 
-    def __init__(self, host="127.0.0.1", port = 12000):
+    def __init__(self, torrent, peer_id, host="127.0.0.1", port = 12000):
         """
         Class constructor
         :param host: by default localhost. Note that '0.0.0.0' takes LAN ip address.
@@ -41,6 +43,8 @@ class Server(object):
         """
         self.host = host
         self.port = port
+        self.torrent = torrent
+        self.peer_id = peer_id
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TODO: create the server socket
         self.client_handlers = {}  # initializes client_handlers list
         self.serversocket.bind((self.host, self.port))
@@ -79,6 +83,10 @@ class Server(object):
         data = self.receive(clienthandler)
 
         print(data)
+
+        upload = Uploader(self.peer_id, self, clienthandler, None, self.torrent)
+
+        upload.run()
 
 
         # P2P Server stuff
@@ -185,9 +193,6 @@ class Server(object):
         print("Server running")
         self._accept_clients()
 
-# main execution
-if __name__ == '__main__':
-    server = Server()
-    server.run()
+
 
 

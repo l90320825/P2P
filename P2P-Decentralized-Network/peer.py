@@ -42,17 +42,18 @@ class Peer:
     LEECHER = 'leecher'
     SEEDER = 'seeder'
 
-    def __init__(self, role=PEER, server_ip_address='127.0.0.2'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
+    def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
         """
         Class constructor
         :param server_ip_address: used when need to use the ip assigned by LAN
         """
-        self.server = Server(server_ip_address, self.SERVER_PORT)  # inherits methods from the server
+        
         #self.client = Client('127.0.0.4', 5000)
         self.server_ip_address = server_ip_address
         self.id = uuid.uuid4()  # creates unique id for the peer
         self.role = role
         self.torrent = Torrent("age.torrent")
+        self.server = Server(self.torrent, self.id, server_ip_address, self.SERVER_PORT)  # inherits methods from the server
         self.tracker = None
         self.swarm = [('127.0.0.1', 5000), ('127.0.0.2', 5000)] #Test
         

@@ -138,8 +138,8 @@ class Client(object):
         self.client.close()
 
     def run(self):
-        self.client.bind((self.host, self.port))
-        self.connect("127.0.0.1", 5000)
+        self.client.bind(("", self.port))
+        self.connect("172.20.176.1", 5000)
 
 """
     def _bind(self):
