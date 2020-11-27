@@ -11,7 +11,6 @@ class Downloader:
         self.torrent = torrent
         self.uploader_id = -1  # not know until the downloader runs.
         self.info_hash = self.torrent.info_hash()
-        self.pwp = pwp
         self.alive = keep_alive
         self.interested = interested
         self.file_manager = FileManager(self.torrent, self.peer_id)

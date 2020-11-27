@@ -15,6 +15,7 @@
 
 from torrent import Torrent
 from message import Message
+from file_manager import FileManager
 import socket
 import pickle
 
@@ -41,6 +42,7 @@ class Client(object):
         self.torrent = torrent
         self.peerid = peerid
         self.message = Message() #Send message
+        self.file_manager = FileManager(torrent, peerid)
 
 
 
@@ -81,12 +83,24 @@ class Client(object):
 
         self.send(data)
 
-        data = self.message.request
-        data['index'] = 0
-        data['begin'] = 0
-        data['length'] = self.torrent.block_size()
+        i = 0
 
-        self.send(data)
+        for i in range(8):
+            data = self.message.request
+            data['index'] = 0
+            data['begin'] = self.torrent.block_size() * i
+            data['length'] = self.torrent.block_size()
+            self.send(data)
+            data = self.receive()
+            blockIndex = self.file_manager.block_index(data['begin'])
+            self.file_manager.flush_block(data['index'],  blockIndex, data['block'])
+            #print(data)
+
+        
+
+        
+
+        
 
 
 
@@ -138,8 +152,13 @@ class Client(object):
         self.client.close()
 
     def run(self):
-        self.client.bind(("", self.port))
-        self.connect("172.20.176.1", 5000)
+
+        self.client.bind(("", self.port)) #connect to different pc, change to 127.0.0.1 if localhost
+        self.connect("10.0.0.246", 5000)#Test
+
+      #  self.client.bind(("", self.port))
+    #    self.connect("172.20.176.1", 5000)
+
 
 """
     def _bind(self):

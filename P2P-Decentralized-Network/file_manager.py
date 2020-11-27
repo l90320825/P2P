@@ -101,7 +101,11 @@ class FileManager:
         :param block:
         :return: VOID
         """
-        theFile = open("blocks.data", "r+")
+        try:
+
+            theFile = open("blocks.data", "r+")
+        except:
+            theFile = open("blocks.data", "w+")
         
         i = 0
         print(theFile.seek(0, 2))
