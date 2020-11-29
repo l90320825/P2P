@@ -120,7 +120,6 @@ class FileManager:
         theFile.write(block)
         theFile.write("\n")
         #print(theFile.seek(0, 2))
-        theFile.seek(0, 2)
         theFile.close()
         #theFile.flush()
 
@@ -146,11 +145,31 @@ class FileManager:
         :param piece:
         :return: VOID
         """
-        theFile = open(self.path, "w")
-        print(self.piece_validated(piece, piece_index))
+        try:
+
+            theFile = open(self.path, "r+")
+        except:
+            theFile = open(self.path, "w+")
+        #theFile = open(self.path, "r+")
+        #theFile.seek(0, 2)
+        #print(theFile.read(2048))
+
+        #print(self.piece_validated(piece, piece_index))
+
         if self.piece_validated(piece, piece_index):
+            
             theFile.seek(piece_index * self.piece_size)
+            
             theFile.write(piece)
+            #theFile.seek(0, 2)
+
+        #theFile.seek(0)
+        #x = theFile.read(self.piece_size)
+        
+        #print(self.piece_validated(x, 0))
+
+        
+        theFile.close()
 
         #if self.piece_validated(piece, piece_index):
             #theFile = open()
