@@ -108,7 +108,8 @@ class FileManager:
             theFile = open("blocks.data", "w+")
         
         i = 0
-        print(theFile.seek(0, 2))
+        #print(theFile.seek(0, 2))
+        theFile.seek(0, 2)
         #theFile.write("\n")
 
         pointer = self.pointer(self.hash_info, piece_index, block_index)
@@ -118,7 +119,7 @@ class FileManager:
         theFile.write("$$$")
         theFile.write(block)
         theFile.write("\n")
-        print(theFile.seek(0, 2))
+        #print(theFile.seek(0, 2))
         theFile.close()
         #theFile.flush()
 
@@ -144,15 +145,35 @@ class FileManager:
         :param piece:
         :return: VOID
         """
-        theFile = open(self.path, "w")
-        print(self.piece_validated(piece, piece_index))
+        try:
+
+            theFile = open(self.path, "r+")
+        except:
+            theFile = open(self.path, "w+")
+        #theFile = open(self.path, "r+")
+        #theFile.seek(0, 2)
+        #print(theFile.read(2048))
+
+        #print(self.piece_validated(piece, piece_index))
+
         if self.piece_validated(piece, piece_index):
+            
             theFile.seek(piece_index * self.piece_size)
+            
             theFile.write(piece)
+            #theFile.seek(0, 2)
+
+        #theFile.seek(0)
+        #x = theFile.read(self.piece_size)
+        
+        #print(self.piece_validated(x, 0))
+
+        
+        theFile.close()
 
         #if self.piece_validated(piece, piece_index):
             #theFile = open()
-        pass # your code here
+        
 
     def get_pointers(self, hash_info, piece_index):
         """
@@ -190,13 +211,15 @@ class FileManager:
         :return: the piece
         """
         piece = ""
+        index = piece_index * 8
 
         theFile = open("blocks.data", 'r')
         aList = theFile.readlines()
-        for i in range(len(aList)):
-            target = aList[i].split('$$$')
+        for i in range(8):
+            target = aList[index].split('$$$')
             #print(target[1])
             piece += str(target[1]).rstrip()
+            index += 1
 
         # your code here
         return piece

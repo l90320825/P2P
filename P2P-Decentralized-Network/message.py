@@ -244,7 +244,7 @@ class Message:
         :param piece_index:
         :return: the next missing block index
         """
-        for i in range(len(self._bitfield['bitfield'][piece_index]) - 1):
+        for i in range(len(self._bitfield['bitfield'][piece_index])):
             if self._bitfield['bitfield'][piece_index][i] == 0:
                 return i
 
@@ -258,8 +258,8 @@ class Message:
         :return: the next missing piece index
         """
 
-        for i in range(len(self._bitfield['bitfield']) - 1):
-            for j in range(len(self._bitfield['bitfield'][i]) - 1):
+        for i in range(len(self._bitfield['bitfield'])):
+            for j in range(len(self._bitfield['bitfield'][i])):
                 if self._bitfield['bitfield'][i][j] == 0:
                     return i
 
