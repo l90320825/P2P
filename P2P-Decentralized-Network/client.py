@@ -15,6 +15,7 @@
 
 from torrent import Torrent
 from message import Message
+from downloader import Downloader
 from file_manager import FileManager
 from downloader import Downloader
 import socket
