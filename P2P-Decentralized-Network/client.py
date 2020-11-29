@@ -16,6 +16,7 @@
 from torrent import Torrent
 from message import Message
 from file_manager import FileManager
+from downloader import Downloader
 import socket
 import pickle
 
@@ -28,7 +29,7 @@ Client class that provides functionality to create a client socket is provided. 
 
 class Client(object):
 
-    def __init__(self, torrent, announce, tracker, peerid, host="127.0.0.1", port = 12000):
+    def __init__(self, message, torrent, announce, tracker, peerid, host="127.0.0.1", port = 12000):
         """
         Class constructor
         """
@@ -41,7 +42,7 @@ class Client(object):
         self.announce = announce
         self.torrent = torrent
         self.peerid = peerid
-        self.message = Message() #Send message
+        self.message = message #Send message
         self.file_manager = FileManager(torrent, peerid)
 
 
@@ -71,7 +72,7 @@ class Client(object):
         data['peer_id'] = self.peerid
         #print(data)
 
-        #TODO  3. send the above data to the server. using the send method which has been already implemented for you.
+        
 
         self.send(data)
 
@@ -83,18 +84,38 @@ class Client(object):
 
         self.send(data)
 
-        i = 0
 
-        for i in range(8):
-            data = self.message.request
-            data['index'] = 0
-            data['begin'] = self.torrent.block_size() * i
-            data['length'] = self.torrent.block_size()
-            self.send(data)
-            data = self.receive()
-            blockIndex = self.file_manager.block_index(data['begin'])
-            self.file_manager.flush_block(data['index'],  blockIndex, data['block'])
-            #print(data)
+        download = Downloader(self.client, self.peerid, self.torrent, 1, 1, self)
+
+        download.run()
+
+        """
+        pieceIndex = 0
+        while pieceIndex < 5:
+
+            for i in range(8): # Download first piece
+                data = self.message.request
+                data['index'] = pieceIndex
+                data['begin'] = self.torrent.block_size() * i
+                data['length'] = self.torrent.block_size()
+
+                self.send(data)
+                data = self.receive()
+                #print(data)
+            
+                blockIndex = self.file_manager.block_index(data['begin'])
+                self.file_manager.flush_block(data['index'],  blockIndex, data['block'])
+                self.message._bitfield['bitfield'][pieceIndex][blockIndex] = True
+
+            pieceIndex += 1
+
+            """
+           
+
+
+
+
+        
 
         
 

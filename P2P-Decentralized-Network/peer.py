@@ -6,6 +6,7 @@ from config import Config
 from torrent import *  # assumes that your Torrent file is in this folder
 from threading import Thread
 import uuid
+from message import Message
 
 """
 class Peer():
@@ -56,6 +57,7 @@ class Peer:
         self.torrent = Torrent("age.torrent")
         self.tracker = None
         self.swarm = [('127.0.0.1', 5000), ('127.0.0.2', 5000)] #Test
+        self.message = Message() #Initatize bitfield for this peer
         
 
     def run_server(self):
@@ -95,15 +97,16 @@ class Peer:
                 #print("Tracker running.....")
 
             if self.role != 'seeder': #Seeder does not need client to download
+                self.message.init_bitfield(self.torrent.num_pieces())#Initize this bitfield
 
-                self.client = Client(self.torrent, announce, self.tracker, str(self.id),  self.server_ip_address, 5001)
+                self.client = Client(self.message, self.torrent, announce, self.tracker, str(self.id),  self.server_ip_address, 5001)
                 Thread(target=self.client.run, daemon=False).start()
                 print("Client started.........")
                 
                 
                 
         except Exception as error:
-            print(error)  # server failed to run
+            print(error) #Tracker or Client error
 
 
 # runs when executing python3 peer.py
