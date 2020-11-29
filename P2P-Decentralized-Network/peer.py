@@ -43,7 +43,7 @@ class Peer:
     SEEDER = 'seeder'
 
     #def __init__(self, role=PEER, server_ip_address='172.20.176.1'): DIFFERENT computer
-    def __init__(self, role=PEER, server_ip_address='172.20.176.1'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
+    def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
 
   #  def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
 

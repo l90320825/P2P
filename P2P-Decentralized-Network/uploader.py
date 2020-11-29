@@ -73,7 +73,7 @@ class Uploader:
         package['index'] = 0
         package['begin'] = 0
         package['block'] = block
-        self.send(package)
+        #self.send(package)
 
         # start with 3 bars
         progressbars = ProgressBars(num_bars=1)
@@ -83,24 +83,27 @@ class Uploader:
         # start all the threaded works
        # Work.start(self.work, (progressbars, 0, 0.1, "<Piece 0 : ", self))
         #Work.start(self.work, (progressbars, 1, 0.01, "w2: "))
+        index = 0
 
-        progressbars.set_bar_prefix(bar_index=0, prefix="<Piece 0 : ")
-        w = 12.5
-        for i in range(100):
-             # your work here. we use the time.sleep() as example
-             # Real work could be downloading a file and show progress
-             time.sleep(0.1)
-             data = self.receive()
-             block = self.file_manager.get_block(data['index'], data['begin'], self.torrent.block_size(), self.file_manager.path_to_original_file)
-             package = self.message.piece
-             package['index'] = data['index']
-             package['begin'] = data['begin']
-             package['block'] = block
-             self.send(package)            
-             w += 12.5
-             progressbars.update(bar_index=0, value=w)
+        while True:
 
-        progressbars.finish()
+            progressbars.set_bar_prefix(bar_index=0, prefix="<Piece " + str(index) + " :")
+            w = 12.5
+            for i in range(8):
+            
+                time.sleep(0.1)
+                data = self.receive()
+                block = self.file_manager.get_block(data['index'], data['begin'], self.torrent.block_size(), self.file_manager.path_to_original_file)
+                package = self.message.piece
+                package['index'] = data['index']
+                package['begin'] = data['begin']
+                package['block'] = block
+                self.send(package)            
+                w += 12.5
+                progressbars.update(bar_index=0, value=w)
+
+            progressbars.finish()
+            index += 1
 
     """   
         while True:

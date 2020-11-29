@@ -79,6 +79,7 @@ class Server(object):
         client_id = addr[1]
         print(addr[1])
         self.send(clienthandler, "Server recived")
+        self.client_handlers[client_id] = clienthandler
         # Create Client Handler?
         data = self.receive(clienthandler)
 
@@ -88,7 +89,11 @@ class Server(object):
 
         print(data)
 
+        
+
         upload = Uploader(self.peer_id, self, clienthandler, None, self.torrent)
+
+        #Thread(target=upload.run, daemon=False).start()
 
         upload.run()
 
@@ -112,10 +117,10 @@ class Server(object):
         #print("self.receive(clienthandler)")
              # creates a stream of bytes
         #self.send(clienthandler, "server got the data")
-             # TODO: receive data from client
-             # TODO: if no data, break the loop
-             # TODO: Otherwise, send acknowledge to client. (i.e a message saying 'server got the data
-              # remove this line after implemented.
+            
+
+
+    
 
 
     def _accept_clients(self):
