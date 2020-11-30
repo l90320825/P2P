@@ -165,8 +165,9 @@ class Message:
         :param num_pieces: the number of pieces defined in the .torrent file
         :return: Void
         """
-        size_bitfield = math.ceil(num_pieces / 8)
-        spare_bits = (8 * size_bitfield) - num_pieces
+        size_bitfield = math.floor(num_pieces / 8)
+        spare_bits = num_pieces - (8 * size_bitfield) 
+
         for i in range(size_bitfield - 1):
             # create a bitarray (piece) of 8 bits size
             # set all the bits to 0 (missing piece)
@@ -181,7 +182,7 @@ class Message:
         # create a new bitarray (piece) of spare bits size
         # # set all the bits to 0 (missing piece)
         # add the new piece to the bitfield (self._bitfield['bitfield])
-        #print( self._bitfield['bitfield'][1])
+        #print(self._bitfield['bitfield'][1])
         
         sparebitarray = []
         sparebitarray = [0 for i in range(spare_bits)]
@@ -300,13 +301,13 @@ class Lab7UnitTests(unittest.TestCase):
 
     def setUp(self):
         self.message = Message()
-        self.message.init_bitfield(200)  # this will create a bitfield of size 25. See Message class (init_bitfield())
-        #print(self.message._bitfield['bitfield'])
+        self.message.init_bitfield(179)  # this will create a bitfield of size 25. See Message class (init_bitfield())
+        print(self.message._bitfield['bitfield'])
 
     
     def test_init_bitfield(self):
         size_bitfield = len(self.message._bitfield['bitfield'])
-        self.assertEqual(size_bitfield, 25)
+        self.assertEqual(size_bitfield, 22)
 
     def test_is_block_missing(self):
         piece_index = 20
@@ -314,7 +315,7 @@ class Lab7UnitTests(unittest.TestCase):
         self.message._bitfield['bitfield'][piece_index][block_index] = True  # block is set to 1 (not missing)
         print(self.message._bitfield['bitfield'][piece_index])
         self.assertFalse(self.message.is_block_missing(piece_index, block_index))  # block is not missing returns False
-"""
+
     def test_is_piece_missing(self):
         piece_index = 19
         self.message._bitfield['bitfield'][piece_index] = b'11111111'  # sets piece index 19 to not missing
@@ -332,7 +333,7 @@ class Lab7UnitTests(unittest.TestCase):
         self.message._bitfield['bitfield'][piece_index] = b'11111111'
         next_missing_piece_index = 1
         self.assertEqual(self.message.next_missing_piece_index(), next_missing_piece_index)
-"""
+
 
 if __name__ == '__main__':
     unittest.main()
