@@ -7,6 +7,7 @@ from torrent import *  # assumes that your Torrent file is in this folder
 from threading import Thread
 import uuid
 from message import Message
+import socket
 
 """
 class Peer():
@@ -44,8 +45,9 @@ class Peer:
     SEEDER = 'seeder'
 
     #def __init__(self, role=PEER, server_ip_address='172.20.176.1'): DIFFERENT computer
-    def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
-
+    #def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
+    
+    def __init__(self, role=SEEDER, server_ip_address=socket.gethostbyname(socket.gethostname())):
   #  def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
 
         """
@@ -119,7 +121,13 @@ if __name__ == '__main__':
     # testing
     #peer = Peer(role='peer')
     peer = Peer()
+    print("\n***** P2P client App *****\n")
     print("Peer: " + str(peer.id) + " started....")
+    print("Max download rate: 2048 b/s")
+    print("Max upload rate: 2048 b/s\n")
+    print("Torrent: " + peer.torrent.torrent_path)
+    print("file: "+ peer.torrent.file_name())
+    print("seeder/s: " + str(peer.server_ip_address) + ":" + str(peer.SERVER_PORT))
     peer.run_server()
     #print("test")
     peer.run_tracker()
