@@ -1,5 +1,5 @@
 import hashlib
-from os import path
+import os 
 import shutil
 from torrent import Torrent 
 
@@ -32,6 +32,12 @@ class FileManager:
         Creates a temporal file to flush the pieces. (i.e ages.tmp)
         :return:
         """
+        if not os.path.exists("resources/tmp"):
+            os.makedirs("resources/tmp")
+
+
+
+
         with open(self.path, "wb") as out:
             out.truncate(self.file_size)
 
@@ -253,7 +259,7 @@ class FileManager:
         :return:
         """
         file_shared_path = "resources/shared/" + self.torrent.file_name()
-        if not path.exists(file_shared_path):
+        if not os.path.exists(file_shared_path):
             shutil.move(self.path, file_shared_path)
 
     def path_exist(self, path_to_file):
