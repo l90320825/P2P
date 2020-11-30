@@ -4,7 +4,8 @@ Please use this README file to provide the following documentation for this proj
 
 * Your name and student id
     * Chun Tat Chan | 916770782
-    * John To | ...
+    * John To | 917507752
+    * Student Github Usernames: l90320825 | chuntatchan
 * General description of the project (a few sentences)
 * If you used external Python modules/libraries. Provide a requirements.txt file  
 * Python version and compatibility issues (if any)

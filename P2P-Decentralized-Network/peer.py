@@ -2,7 +2,7 @@ from client import Client
 from server import Server
 from tracker import Tracker
 from config import Config
-#from downloader import downloader
+# from downloader import downloader
 from torrent import *  # assumes that your Torrent file is in this folder
 from threading import Thread
 import uuid
@@ -24,8 +24,6 @@ class Peer():
     """
 
 
-
-
 class Peer:
     """
     In this part of the peer class we implement methods to connect to multiple peers.
@@ -33,7 +31,6 @@ class Peer:
     """
     SERVER_PORT = 5000
     CLIENT_MIN_PORT_RANGE = 5001
-
 
     MAX_NUM_CONNECTIONS = 10
     MAX_UPLOAD_RATE = 100
@@ -43,26 +40,28 @@ class Peer:
     LEECHER = 'leecher'
     SEEDER = 'seeder'
 
-    #def __init__(self, role=PEER, server_ip_address='172.20.176.1'): DIFFERENT computer
-    def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
+    # def __init__(self, role=PEER, server_ip_address='172.20.176.1'): DIFFERENT computer
+    def __init__(self, role=SEEDER,
+                 server_ip_address='10.0.0.246'):  # Run client role = PEER or LEECHER, Don't run client role = SEEDER
 
-  #  def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
+        #  def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
 
         """
         Class constructor
         :param server_ip_address: used when need to use the ip assigned by LAN
         """
-        
-        #self.client = Client('127.0.0.4', 5000)
+
+        # self.client = Client('127.0.0.4', 5000)
         self.server_ip_address = server_ip_address
         self.id = uuid.uuid4()  # creates unique id for the peer
         self.role = role
         self.torrent = Torrent("age.torrent")
-        self.server = Server(self.torrent, self.id, server_ip_address, self.SERVER_PORT)  # inherits methods from the server
-        self.tracker = None
-        self.swarm = [('127.0.0.1', 5000), ('127.0.0.2', 5000)] #Test
-        self.message = Message() #Initatize bitfield for this peer
-        
+        self.server = Server(self.torrent, self.id, server_ip_address,
+                             self.SERVER_PORT)  # inherits methods from the server
+        self.client = None
+        self.tracker = None  # Tracker(self.server, self.torrent, False) #bool - announce?
+        self.swarm = [('127.0.0.1', 5000), ('127.0.0.2', 5000)]  # Test
+        self.message = Message()  # Initialize bitfield for this peer
 
     def run_server(self):
         """
@@ -76,15 +75,16 @@ class Peer:
         except Exception as error:
             print(error)  # server failed to run
 
-    """def run_client(self, announce=False):
+    """
+    def run_client(self, announce=False):
         try:
             Thread(target=self.client.run, daemon=False).start()
             print("Client started.........")
 
             
         except Exception as error:
-            print(error)  # server failed to run"""
-
+            print(error)  # server failed to run
+    """
 
     def run_tracker(self, announce=False):
         """
@@ -93,38 +93,35 @@ class Peer:
         :return: VOID
         """
         try:
-            
-            #if self.server:
-                
-                #self.tracker = Tracker(self.server, self.torrent, announce)
-                #Thread(target=self.tracker.run, daemon=False).start()
-                #print("Tracker running.....")
 
-            if self.role != 'seeder': #Seeder does not need client to download
-                self.message.init_bitfield(self.torrent.num_pieces())#Initize this bitfield
+            if self.server:
+                self.tracker = Tracker(self.server, self.torrent, announce)
+                Thread(target=self.tracker.run, daemon=False).start()
+                print("Tracker running.....")
 
-                self.client = Client(self.message, self.torrent, announce, self.tracker, str(self.id),  self.server_ip_address, 5001)
+            if self.role != 'seeder':  # Seeder does not need client to download
+                self.message.init_bitfield(self.torrent.num_pieces())  # Initialize this bitfield
+
+                self.client = Client(self.message, self.torrent, announce, self.tracker, str(self.id),
+                                     self.server_ip_address, 5001)
                 Thread(target=self.client.run, daemon=False).start()
                 print("Client started.........")
-                
-                
-                
+
+            # Get an array of (ip, port) that are connected to the torrent file
+            self.swarm = self.tracker.get_DHT()
+
         except Exception as error:
-            print(error) #Tracker or Client error
+            print(error)  # Tracker or Client error
 
 
 # runs when executing python3 peer.py
 # main execution
 if __name__ == '__main__':
     # testing
-    #peer = Peer(role='peer')
+    # peer = Peer(role='peer')
     peer = Peer()
     print("Peer: " + str(peer.id) + " started....")
     peer.run_server()
-    #print("test")
+    # print("test")
     peer.run_tracker()
-    #peer.run_client()
-
-
-    
-
+    # peer.run_client()

@@ -3,7 +3,9 @@ Copy and paste here your code implementation from message.py file
 """
 
 # file:           message.py
-# Author:         <your name here>
+# Student Name: John To and Chun Tat Chan
+# Student ID: 917507752 and 916770782
+# Student Github Username: l90320825 and chuntatchan
 # Date:           04/24/2020
 # Description:    This file contains the Message and Lab7UnitTests classes.
 # Purpose:        Lab 7 CSC645 Computer Networks SFSU
