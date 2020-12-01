@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="10d1dc1a-96a0-4791-823d-f0727536b307" name="Default Changelist" comment="" />
+    <list default="true" id="10d1dc1a-96a0-4791-823d-f0727536b307" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/P2P.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/P2P.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/message.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/message.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/peer.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/peer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/tracker.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,6 +28,56 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
+  <component name="RunManager" selected="Python.peer">
+    <configuration name="peer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="P2P" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/P2P-Decentralized-Network" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/P2P-Decentralized-Network/peer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tracker" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="P2P" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/P2P-Decentralized-Network" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/P2P-Decentralized-Network/tracker.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.peer" />
+        <item itemvalue="Python.tracker" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -29,5 +88,23 @@
       <updated>1605668733892</updated>
     </task>
     <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1522" height="279" key="GridCell.Tab.0.bottom" timestamp="1606728732014">
+      <screen x="0" y="0" width="2560" height="1040" />
+    </state>
+    <state width="1522" height="279" key="GridCell.Tab.0.bottom/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1606728732014" />
+    <state width="1522" height="279" key="GridCell.Tab.0.center" timestamp="1606728732014">
+      <screen x="0" y="0" width="2560" height="1040" />
+    </state>
+    <state width="1522" height="279" key="GridCell.Tab.0.center/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1606728732014" />
+    <state width="1522" height="279" key="GridCell.Tab.0.left" timestamp="1606728732014">
+      <screen x="0" y="0" width="2560" height="1040" />
+    </state>
+    <state width="1522" height="279" key="GridCell.Tab.0.left/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1606728732014" />
+    <state width="1522" height="279" key="GridCell.Tab.0.right" timestamp="1606728732014">
+      <screen x="0" y="0" width="2560" height="1040" />
+    </state>
+    <state width="1522" height="279" key="GridCell.Tab.0.right/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1606728732014" />
   </component>
 </project>

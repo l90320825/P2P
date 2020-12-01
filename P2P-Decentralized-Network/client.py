@@ -6,9 +6,9 @@
 # Date: 02/03/2020
 # Lab3: TCP Client Socket
 # Goal: Learning Networking in Python with TCP sockets
-# Student Name:
-# Student ID:
-# Student Github Username:
+# Student Name: John To and Chun Tat Chan
+# Student ID: 917507752 and 916770782
+# Student Github Username: l90320825 and chuntatchan
 # Instructions: Read each problem carefully, and implement them correctly.  No partial credit will be given.
 ########################################################################################################################
 
@@ -21,22 +21,20 @@ from downloader import Downloader
 import socket
 import pickle
 
-
-
-
 ######################################## Client Socket ###############################################################3
 """
 Client class that provides functionality to create a client socket is provided. Implement all the TODO parts 
 """
 
+
 class Client(object):
 
-    def __init__(self, message, torrent, announce, tracker, peerid, host="127.0.0.1", port = 12000):
+    def __init__(self, message, torrent, announce, tracker, peerid, host="127.0.0.1", port=12000):
         """
         Class constructor
         """
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.host = host
         self.port = port
         self.tracker = tracker
@@ -44,10 +42,8 @@ class Client(object):
         self.announce = announce
         self.torrent = torrent
         self.peerid = peerid
-        self.message = message #Send message
+        self.message = message  # Send message
         self.file_manager = FileManager(torrent, peerid)
-
-
 
     def connect(self, server_ip_address, server_port):
         """
@@ -56,25 +52,22 @@ class Client(object):
         :param server_port:
         :return:
         """
-        #TODO: 1. use the self.client to create a connection with the server
-       
-        self.client.connect((server_ip_address, server_port))
-         
+        # TODO: 1. use the self.client to create a connection with the server
 
-        #TODO: 2. once the client creates a successful connection, the server will send the client id to this client.
+        self.client.connect((server_ip_address, server_port))
+
+        # TODO: 2. once the client creates a successful connection, the server will send the client id to this client.
         #      call the method set_client_id() to implement that functionality.
 
         self.set_client_id()
 
         # data dictionary already created for you. Don't modify.
-        #data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
+        # data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
         print("Handshaking")
         data = self.message.handshake
         data['info_hash'] = self.torrent.info_hash()
         data['peer_id'] = self.peerid
-        #print(data)
-
-        
+        # print(data)
 
         self.send(data)
 
@@ -82,10 +75,9 @@ class Client(object):
 
         print(data)
 
-        data = self.message.interested #Tell server client is interested to download
+        data = self.message.interested  # Tell server client is interested to download
 
         self.send(data)
-
 
         download = Downloader(self.client, self.peerid, self.torrent, 1, 1, self)
 
@@ -112,28 +104,13 @@ class Client(object):
             pieceIndex += 1
 
             """
-           
 
-
-
-
-        
-
-        
-
-        
-
-        
-
-
-
-
-        while True: # client is put in listening mode to retrieve data from server.
+        while True:  # client is put in listening mode to retrieve data from server.
             data = self.receive()
             if not data:
                 break
             print(data)
-            #data = self.message.interested
+            # data = self.message.interested
 
             # do something with the data
         self.close()
@@ -144,7 +121,7 @@ class Client(object):
         :param data:
         :return:
         """
-        serialized_data = pickle.dumps(data) # serialized data
+        serialized_data = pickle.dumps(data)  # serialized data
         self.client.send(serialized_data)
 
     def receive(self, MAX_BUFFER_SIZE=4090):
@@ -153,8 +130,8 @@ class Client(object):
         :param MAX_BUFFER_SIZE: Max allowed allocated memory for this data
         :return: the deserialized data.
         """
-        
-        raw_data = self.client.recv(MAX_BUFFER_SIZE) # deserializes the data from server
+
+        raw_data = self.client.recv(MAX_BUFFER_SIZE)  # deserializes the data from server
         return pickle.loads(raw_data)
 
     def set_client_id(self):
@@ -162,9 +139,9 @@ class Client(object):
         Sets the client id assigned by the server to this client after a succesfull connection
         :return:
         """
-        data = self.receive() # deserialized data
-        client_id = data['clientid'] # extracts client id from data
-        self.client_id = client_id # sets the client id to this client
+        data = self.receive()  # deserialized data
+        client_id = data['clientid']  # extracts client id from data
+        self.client_id = client_id  # sets the client id to this client
         print("Client id " + str(self.client_id) + " assigned by server")
 
     def close(self):
@@ -176,12 +153,14 @@ class Client(object):
 
     def run(self):
 
+
         self.client.bind(("", self.port)) #connect to different pc, change to 127.0.0.1 if localhost
         #self.connect("10.0.0.246", 5000)#Test
 
         self.connect("127.0.0.1", 5000)
 
-      #  self.client.bind(("", self.port))
+
+    #  self.client.bind(("", self.port))
     #    self.connect("172.20.176.1", 5000)
 
 
@@ -207,19 +186,14 @@ class Client(object):
 
             """
 
-
-
-    
-
 # main execution
 if __name__ == '__main__':
     server_ip_address = "127.0.0.1"  # don't modify for this lab only
-    server_port = 12000 # don't modify for this lab only
-    #client = Client(False)
-    #client.connect(server_ip_address, server_port)
+    server_port = 12000  # don't modify for this lab only
+    # client = Client(False)
+    # client.connect(server_ip_address, server_port)
 
 # How do I know if this works?
 # when this client connects, the server will assign you a client id that will be printed in the client console
 # Your server must print in console all your info sent by this client
 # See README file for more details
-
