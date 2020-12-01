@@ -30,6 +30,7 @@ class Peer:
     In this part of the peer class we implement methods to connect to multiple peers.
     Once the connection is created downloading data is done in similar way as in TCP assigment.
     """
+    SERVER_IP = '127.0.0.2'
     SERVER_PORT = 5000
     CLIENT_MIN_PORT_RANGE = 5001
 
@@ -44,8 +45,8 @@ class Peer:
     #def __init__(self, role=PEER, server_ip_address='172.20.176.1'): DIFFERENT computer
     #def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
     
-    def __init__(self, role=SEEDER, server_ip_address=socket.gethostbyname(socket.gethostname())):
-  #  def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
+    #def __init__(self, role=PEER, server_ip_address=socket.gethostbyname(socket.gethostname())):
+    def __init__(self, role=PEER, server_ip_address=SERVER_IP):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
 
         """
         Class constructor
