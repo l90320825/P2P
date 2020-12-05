@@ -1,13 +1,17 @@
 import torrent_parser as tp
 from config import Config
+import os
 
 import hashlib
 
 class Torrent:
 
     def __init__(self, torrent_path):
+        #if not os.path.exists("resources/torrents/"):
+           # os.makedirs("resources/torrents/")
+        torrents_path = "resources/torrents/" + torrent_path
         self.torrent_path = torrent_path
-        self.torrent_data = tp.parse_torrent_file(torrent_path)
+        self.torrent_data = tp.parse_torrent_file(torrents_path)
         self.config = Config()
 
 

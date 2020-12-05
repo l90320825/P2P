@@ -29,7 +29,7 @@ Client class that provides functionality to create a client socket is provided. 
 
 class Client(object):
 
-    def __init__(self, message, torrent, announce, tracker, peerid, host="127.0.0.1", port=12000):
+    def __init__(self, peer, id, message, torrent, announce, tracker, peerid, target, host="127.0.0.1", port=12000):
         """
         Class constructor
         """
@@ -37,6 +37,7 @@ class Client(object):
         # self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.host = host
         self.port = port
+        self.peer = peer
         self.tracker = tracker
         self.client_id = None
         self.announce = announce
@@ -44,6 +45,8 @@ class Client(object):
         self.peerid = peerid
         self.message = message  # Send message
         self.file_manager = FileManager(torrent, peerid)
+        self.target = target
+        self.id = id
 
     def connect(self, server_ip_address, server_port):
         """
@@ -52,36 +55,38 @@ class Client(object):
         :param server_port:
         :return:
         """
-        # TODO: 1. use the self.client to create a connection with the server
+        
 
         self.client.connect((server_ip_address, server_port))
 
-        # TODO: 2. once the client creates a successful connection, the server will send the client id to this client.
-        #      call the method set_client_id() to implement that functionality.
+    
 
         self.set_client_id()
 
         # data dictionary already created for you. Don't modify.
         # data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
-        print("Handshaking")
+        #print("Handshaking")
+
         data = self.message.handshake
         data['info_hash'] = self.torrent.info_hash()
         data['peer_id'] = self.peerid
-        # print(data)
-
         self.send(data)
-
         data = self.receive()
-
-        print(data)
+        #print("Handshaking " + str(data))
 
         data = self.message.interested  # Tell server client is interested to download
-
         self.send(data)
+        data = self.receive()
+        #print("Interested " + str(data))
 
-        download = Downloader(self.client, self.peerid, self.torrent, 1, 1, self)
+        #self.send(data)
+        #data = self.receive()
 
-        download.run()
+        #print(self.client.getsockname())
+
+        Downloader(self.client, self.peerid, self.torrent, 1, 1, self).run()
+
+       
 
         """
         pieceIndex = 0
@@ -142,7 +147,7 @@ class Client(object):
         data = self.receive()  # deserialized data
         client_id = data['clientid']  # extracts client id from data
         self.client_id = client_id  # sets the client id to this client
-        print("Client id " + str(self.client_id) + " assigned by server")
+        #print("Client id " + str(self.client_id) + " assigned by server")
 
     def close(self):
         """
@@ -154,10 +159,10 @@ class Client(object):
     def run(self):
 
 
-        self.client.bind(("", self.port)) #connect to different pc, change to 127.0.0.1 if localhost
+        self.client.bind((self.host, self.port)) #connect to different pc, change to 127.0.0.1 if localhost
         #self.connect("10.0.0.246", 5000)#Test
 
-        self.connect("127.0.0.1", 5000)
+        self.connect(self.target, 5000)
 
 
     #  self.client.bind(("", self.port))

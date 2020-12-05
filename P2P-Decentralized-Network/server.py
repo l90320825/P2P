@@ -58,7 +58,7 @@ class Server(object):
 
             self.serversocket.listen(MAX_NUM_CONN)
 
-            print(socket.gethostbyname(socket.gethostname()))
+            #print(socket.gethostbyname(socket.gethostname()))
 
             print("Listening at " + self.host + "/" + str(self.port))
 
@@ -73,17 +73,20 @@ class Server(object):
         :param clienthandler:
         :return:
         """
+        
 
         client_id = addr[1]
         print(addr[1])
-        self.send(clienthandler, "Server recived")
+        #self.send(clienthandler, "Server recived")
         self.client_handlers[client_id] = clienthandler
         # Create Client Handler?
-        data = self.receive(clienthandler)
+        data = self.receive(clienthandler)#Handshake
 
         print(data)
+        self.send(clienthandler, "Comfirm handshake")
 
         data = self.receive(clienthandler)
+        self.send(clienthandler, "Comfirm Interested")
 
         print(data)
 
@@ -91,17 +94,23 @@ class Server(object):
 
         # Thread(target=upload.run, daemon=False).start()
 
-        upload.run()
+        try:
+
+            upload.run()
 
         # P2P Server stuff
-        while True:
-            data = self.receive(clienthandler)
-            if not data:
-                print("Bad Input")
-                break
-            print(data)
+       
+            while True:
+                data = self.receive(clienthandler)
+                if not data:
+                    print("Bad Input")
+                    break
+                print(data)
             # Do Stuff with Data
-        clienthandler.close()
+        except Exception as e:
+            print(e)
+            clienthandler.close()
+            print(self.client_handlers.pop(client_id))
 
         # self.receive(clienthandler)
         # client_handler = ClientHandler(self, clienthandler, addr)
@@ -120,16 +129,17 @@ class Server(object):
         while True:
             try:
                 clienthandler, addr = self.serversocket.accept()
-                client_id = {'clientid': addr[1]}
+                client_id = addr[1]
                 self._send_clientid(clienthandler, client_id)
                 print("Server recev")
                 print(addr)
                 Thread(target=self.threaded_client, args=(clienthandler, addr)).start()
 
             except Exception as e:
-                print(e)
-                self.send(clienthandler, "Something wrong about the server")
-                self.serversocket.close()
+                print('Error')
+                clienthandler.close()
+                #self.send(clienthandler, "Something wrong about the server")
+                #self.serversocket.close()
             # handle exceptions here
 
     def _send_clientid(self, clienthandler, clientid):

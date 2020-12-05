@@ -165,8 +165,8 @@ class Message:
         :param num_pieces: the number of pieces defined in the .torrent file
         :return: Void
         """
-        size_bitfield = math.floor(num_pieces / 8)
-        spare_bits = num_pieces - (8 * size_bitfield) 
+        size_bitfield = math.ceil(num_pieces / 8)
+        spare_bits = 8 - ((8 * size_bitfield) - num_pieces)
 
         for i in range(size_bitfield - 1):
             # create a bitarray (piece) of 8 bits size
@@ -251,7 +251,7 @@ class Message:
             if self._bitfield['bitfield'][piece_index][i] == 0:
                 return i
 
-        return 0
+        return -1
 
         
 
@@ -267,7 +267,7 @@ class Message:
                     return i
 
 
-        return 0
+        return -1
 
 
 

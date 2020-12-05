@@ -8,6 +8,9 @@ from threading import Thread
 import uuid
 from message import Message
 import socket
+from file_manager import FileManager
+import time
+from htpbs import ProgressBars
 
 """
 class Peer():
@@ -30,7 +33,11 @@ class Peer:
     In this part of the peer class we implement methods to connect to multiple peers.
     Once the connection is created downloading data is done in similar way as in TCP assigment.
     """
-    SERVER_IP = '127.0.0.2'
+    SERVER_IP = '127.0.0.3'
+    TARGET_IP = '127.0.0.1'
+    TARGET2_IP = '127.0.0.2'
+    TARGET3_IP = '127.0.0.4'
+    NUM_SERVER = 2
     SERVER_PORT = 5000
     CLIENT_MIN_PORT_RANGE = 5001
 
@@ -62,8 +69,10 @@ class Peer:
                              self.SERVER_PORT)  # inherits methods from the server
         self.client = None
         self.tracker = None  # Tracker(self.server, self.torrent, False) #bool - announce?
-        self.swarm = [('127.0.0.1', 5000), ('127.0.0.2', 5000)]  # Test
+        self.swarm = [('127.0.0.1', 5000), ('127.0.0.2', 5000), ('127.0.0.3', 5000)]  # Test
         self.message = Message()  # Initialize bitfield for this peer
+        self.file_manager = FileManager(self.torrent, self.id)
+        self.progressbars = ProgressBars(num_bars=self.NUM_SERVER)
 
     def run_server(self):
         """
@@ -95,25 +104,98 @@ class Peer:
         :return: VOID
         """
         try:
-
+            """
             if self.server:
                 self.tracker = Tracker(self.server, self.torrent, announce)
                 Thread(target=self.tracker.run, daemon=False).start()
                 print("Tracker running.....")
+                """
 
             if self.role != 'seeder':  # Seeder does not need client to download
-                self.message.init_bitfield(self.torrent.num_pieces())  # Initialize this bitfield
 
-                self.client = Client(self.message, self.torrent, announce, self.tracker, str(self.id),
+                self.message.init_bitfield(self.torrent.num_pieces())  # Initialize this bitfield
+                self.file_manager.create_tmp_file()
+                i = 0
+
+
+                print(self.swarm[1][0])
+                port = 5001
+               
+                for i in range(self.NUM_SERVER):
+                    peer_ip = self.swarm[i][0]
+                    self._connect_to_peer(i , port, peer_ip)
+                    port += 1
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                """
+                self.client = Client(self, 0, self.message, self.torrent, announce, self.tracker, str(self.id), self.TARGET_IP,
                                      self.server_ip_address, 5001)
                 Thread(target=self.client.run, daemon=False).start()
-                print("Client started.........")
+
+                time.sleep(1)
+
+                
+                
+                self.client2 = Client(self, 1, self.message, self.torrent, announce, self.tracker, str(self.id), self.TARGET2_IP,
+                                     self.server_ip_address, 5002)
+                Thread(target=self.client2.run, daemon=False).start()
+
+                time.sleep(1)
+
+                
+                
+                self.client3 = Client(self, 2, self.message, self.torrent, announce, self.tracker, str(self.id), self.TARGET3_IP,
+                                     self.server_ip_address, 5003)
+                Thread(target=self.client3.run, daemon=False).start()
+                
+                """
+               
+                
+               # print("Client started.........")
 
             # Get an array of (ip, port) that are connected to the torrent file
-            self.swarm = self.tracker.get_DHT()
+            #self.swarm = self.tracker.get_DHT()
 
         except Exception as error:
             print(error)  # Tracker or Client error
+
+
+    def _connect_to_peer(self, threadID, client_port_to_bind, peer_ip_address):
+        """
+        TODO: * Create a new client object and bind the port given as a
+              parameter to that specific client. Then use this client
+              to connect to the peer (server) listening in the ip
+              address provided as a parameter
+              * Thread the client
+              * Run the downloader
+        :param client_port_to_bind: the port to bind to a specific client
+        :param peer_ip_address: the peer ip address that
+                                the client needs to connect to
+        :return: VOID
+        """
+        try:
+            self.client = Client(self, threadID, self.message, self.torrent, 1, self.tracker, str(self.id), peer_ip_address,
+                                     self.server_ip_address, client_port_to_bind)
+            Thread(target=self.client.run, daemon=False).start()
+            print("Client started.........")
+                            
+        except Exception as error:
+            print(error)  # server failed to run        
 
 
 # runs when executing python3 peer.py
@@ -122,6 +204,7 @@ if __name__ == '__main__':
     # testing
     # peer = Peer(role='peer')
     peer = Peer()
+    #print(peer.torrent.info_hash())
     print("\n***** P2P client App *****\n")
     print("Peer: " + str(peer.id) + " started....")
     print("Max download rate: 2048 b/s")

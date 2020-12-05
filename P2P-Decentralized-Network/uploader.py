@@ -68,15 +68,16 @@ class Uploader:
 
     def run(self):
         self.file_manager.set_path_to_original_file("age.txt")
-        block = self.file_manager.get_block(0, 0, self.torrent.block_size(), self.file_manager.path_to_original_file)
-        package = self.message.piece
-        package['index'] = 0
-        package['begin'] = 0
-        package['block'] = block
+       # block = self.file_manager.get_block(0, 0, self.torrent.block_size(), self.file_manager.path_to_original_file)
+       # package = self.message.piece
+       # package['index'] = 0
+       # package['begin'] = 0
+       # package['block'] = block
         #self.send(package)
+        
 
         # start with 3 bars
-        progressbars = ProgressBars(num_bars=1)
+        #progressbars = ProgressBars(num_bars=1)
         # set bar #3 to be the total progress
         #progressbars.set_last_bar_as_total_progress(prefix="Total: ")
 
@@ -85,24 +86,29 @@ class Uploader:
         #Work.start(self.work, (progressbars, 1, 0.01, "w2: "))
         index = 0
 
+        print("running uploader")
+
         while True:
 
-            progressbars.set_bar_prefix(bar_index=0, prefix="<Piece " + str(index) + " :")
+           # progressbars.set_bar_prefix(bar_index=0, prefix="<Piece " + str(index) + " :")
             w = 12.5
             for i in range(8):
             
-                time.sleep(0.1)
+                #time.sleep(0.1)
                 data = self.receive()
+                
                 block = self.file_manager.get_block(data['index'], data['begin'], self.torrent.block_size(), self.file_manager.path_to_original_file)
                 package = self.message.piece
                 package['index'] = data['index']
                 package['begin'] = data['begin']
                 package['block'] = block
+
+                print(package)
                 self.send(package)            
                 w += 12.5
-                progressbars.update(bar_index=0, value=w)
+               # progressbars.update(bar_index=0, value=w)
 
-            progressbars.finish()
+           # progressbars.finish()
             index += 1
 
     """   

@@ -107,26 +107,89 @@ class FileManager:
         :param block:
         :return: VOID
         """
+
+        if not os.path.exists("resources/tmp"):
+            os.makedirs("resources/tmp")
+
+
+
+
+
+
+
         try:
 
             theFile = open("blocks.data", "r+")
         except:
             theFile = open("blocks.data", "w+")
+
+
+        
         
         i = 0
         #print(theFile.seek(0, 2))
-        theFile.seek(0, 2)
+        #theFile.seek(0, 2)
         #theFile.write("\n")
+        theblock = ""
+        
 
         pointer = self.pointer(self.hash_info, piece_index, block_index)
-        #print(pointer.decode("UTF-8"))
         pointer = pointer.decode("UTF-8")
-        theFile.write(pointer)
-        theFile.write("$$$")
-        theFile.write(block)
-        theFile.write("\n")
+
+
+        theblock += pointer
+        theblock += "$$$"
+        theblock += block
+        theblock += "  "
+        """
+        if theFile.seek(0, 2) == 0:
+            truncateSize = len(theblock) * 8 
+            theFile.truncate(truncateSize)
+        """
+
+        blockPos = (piece_index * 8) + block_index
+
+        filePos = len(theblock) * blockPos
+
+        if filePos == 0:
+            theFile.seek(0)
+            theFile.write(pointer)
+            theFile.write("$$$")
+            theFile.write(block)
+        else:
+            theFile.seek(filePos)
+            theFile.write("\n")
+            theFile.write(pointer)
+            theFile.write("$$$")
+            theFile.write(block)
+            theFile.write("\n")
+            
+
+
+
+
+
+        
+
+
+
+
+        #print(pointer.decode("UTF-8"))
+        #theFile.write(" ")
+        
+        
+
+        #print(block)
+       
+        
+        #theFile.write("\n")
+
+
+        #theFile.write(theblock)
+        
         #print(theFile.seek(0, 2))
         theFile.close()
+        #print(len(theblock))
         #theFile.flush()
 
         
@@ -251,6 +314,8 @@ class FileManager:
     def piece_validated(self, piece, piece_index):
         hashed_torrent_piece = self.torrent.piece(piece_index)
         hashed_piece = self.hash(piece.encode())
+       # print(hashed_torrent_piece)
+        #print(hashed_piece)
         return hashed_torrent_piece == hashed_piece
 
     def move_tmp_to_shared(self):
@@ -259,11 +324,14 @@ class FileManager:
         :return:
         """
         file_shared_path = "resources/shared/" + self.torrent.file_name()
+        print("Tmp file moved to resources/shared/")
         if not os.path.exists(file_shared_path):
+            os.makedirs("resources/shared/")
             shutil.move(self.path, file_shared_path)
+            
 
     def path_exist(self, path_to_file):
-        return path.exists(path_to_file)
+        return os.path.exists(path_to_file)
 
     def run(self):
         loop = int(self.piece_size/2048)
