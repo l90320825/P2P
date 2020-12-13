@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="10d1dc1a-96a0-4791-823d-f0727536b307" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/P2P.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/P2P.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/message.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/message.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/peer.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/peer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/resources/tmp/ages.tmp" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/resources/tmp/ages.tmp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/tracker.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,7 +22,12 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/P2P-Decentralized-Network" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\chunt\Documents\SFSU\CSC645\P2P\P2P-Decentralized-Network" />
+    </key>
   </component>
   <component name="RunManager" selected="Python.peer">
     <configuration name="peer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -90,21 +91,21 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1522" height="279" key="GridCell.Tab.0.bottom" timestamp="1606728732014">
+    <state width="1509" height="217" key="GridCell.Tab.0.bottom" timestamp="1607861412899">
       <screen x="0" y="0" width="2560" height="1040" />
     </state>
-    <state width="1522" height="279" key="GridCell.Tab.0.bottom/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1606728732014" />
-    <state width="1522" height="279" key="GridCell.Tab.0.center" timestamp="1606728732014">
+    <state width="1509" height="217" key="GridCell.Tab.0.bottom/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1607861412899" />
+    <state width="1509" height="217" key="GridCell.Tab.0.center" timestamp="1607861412899">
       <screen x="0" y="0" width="2560" height="1040" />
     </state>
-    <state width="1522" height="279" key="GridCell.Tab.0.center/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1606728732014" />
-    <state width="1522" height="279" key="GridCell.Tab.0.left" timestamp="1606728732014">
+    <state width="1509" height="217" key="GridCell.Tab.0.center/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1607861412899" />
+    <state width="1509" height="217" key="GridCell.Tab.0.left" timestamp="1607861412899">
       <screen x="0" y="0" width="2560" height="1040" />
     </state>
-    <state width="1522" height="279" key="GridCell.Tab.0.left/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1606728732014" />
-    <state width="1522" height="279" key="GridCell.Tab.0.right" timestamp="1606728732014">
+    <state width="1509" height="217" key="GridCell.Tab.0.left/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1607861412899" />
+    <state width="1509" height="217" key="GridCell.Tab.0.right" timestamp="1607861412899">
       <screen x="0" y="0" width="2560" height="1040" />
     </state>
-    <state width="1522" height="279" key="GridCell.Tab.0.right/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1606728732014" />
+    <state width="1509" height="217" key="GridCell.Tab.0.right/0.0.2560.1040/-2498.-550.2498.1080@0.0.2560.1040" timestamp="1607861412899" />
   </component>
 </project>

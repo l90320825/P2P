@@ -9,15 +9,17 @@ import hashlib
 
 
 class Tracker:
-    DHT_PORT = 12001
+    DHT_PORT = 15001
     # Shouldn't DHT_IP be "" for it to use the IPv4 given by router? - Chun
-    DHT_IP = "127.0.0.1"
+    # DHT_IP = "127.0.0.1"
 
     def __init__(self, server, torrent, announce=False):
         self.server = server
         self.torrent = torrent
         self.torrent_info_hash = self._get_torrent_info_hash()
         self.announce = announce
+
+        self.DHT_IP = self.server.host
 
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -38,15 +40,17 @@ class Tracker:
         # {'nodeID': '<the node id is a SHA1 hash of the ip_address and port of the server node and a random uuid>',
         #  'ip_address': '<the ip address of the node>', 'port': '<the port number of the node',
         #  'info_hash': '<the info hash from the torrent file>', last_changed': 'timestamp'}
-        self._routing_table = []
+        self._routing_table = {}
 
     def _get_torrent_info_hash(self):
         """
         TODO: creates the torrent info hash (SHA1) from the info section in the torrent file
         :return:
         """
-        torrent_info_sha1_hash = hashlib.sha1(self.torrent.info_hash())
-        return torrent_info_sha1_hash  # returns the info hash
+        return self.torrent.info_hash()
+        # encoded_hash = self.encode(self.torrent.info_hash)
+        # torrent_info_sha1_hash = hashlib.sha1(encoded_hash)
+        # return torrent_info_sha1_hash  # returns the info hash
 
     # def add_peer_to_swarm(self, peer_id, peer_ip, peer_port):
     #     """
@@ -75,8 +79,8 @@ class Tracker:
     #     except Exception as e:
     #         print(e)
 
-    def get_DHT(self):
-        return self._routing_table
+    def get_DHT(self, info_hash):
+        return self._routing_table[info_hash]
 
     def remove_peer_from_DHT(self, peer_id):
         try:
@@ -92,7 +96,10 @@ class Tracker:
         :param message: a dictionary representing the message
         :return: the bencoded message
         """
-        return bencodepy.encode(message)
+        #print("SOMETHING")
+        encoded_message = bencodepy.encode(message)
+        #print("SOMETHING SOMETHING")
+        return encoded_message
 
     def decode(self, bencoded_message):
         """
@@ -112,7 +119,7 @@ class Tracker:
         :return:
         """
         try:
-            # print(message)
+            print("Broadcast_Message: ", message)
             encoded_message = self.encode(message)
             print("bencoded = " + encoded_message.decode('utf-8') + "\n")
             self.udp_socket.sendto(encoded_message, ('<broadcast>', self.DHT_PORT))
@@ -127,6 +134,7 @@ class Tracker:
             print("bencoded = " + message.decode('utf8') + "\n")
             # new_socket.sendto(message, (ip, port))
             self.udp_socket.sendto(message, (ip, port))
+            print("Sent!")
         except:
             print("error")
 
@@ -135,6 +143,7 @@ class Tracker:
             print("Listening at DHT port: ", self.DHT_PORT)
             while True:
                 raw_data, sender_ip_and_port = self.udp_socket.recvfrom(4096)
+                # print("Received Data")
                 # print(self.DHT_IP !=  sender_ip_and_port[0])
                 if raw_data and self.DHT_IP != sender_ip_and_port[0]:
                     data = self.decode(raw_data)
@@ -166,16 +175,21 @@ class Tracker:
 
     def _routing_table_add(self, node):
         i = 0
-        infohash = self.torrent.info_hash
-        infohash = infohash[:20]
-        Alist = self._routing_table[infohash]
-        for item in Alist:
-            if node == item:
-                i = 1
-                break
-        if i == 0:
+        infohash = self.torrent_info_hash
+        print("Info_hash: ", infohash)
+        # infohash = infohash[:20]
+        try:
+            Alist = self._routing_table[infohash]
+            for item in Alist:
+                if node == item:
+                    i = 1
+                    break
+            if i == 0:
+                self._routing_table[infohash].append(node)
+            print("DHT: ", self._routing_table)
+        except:
+            self._routing_table[infohash] = []
             self._routing_table[infohash].append(node)
-        print(self._routing_table)
 
     def ping(self, t, y, a=None, r=None):
         """
@@ -187,7 +201,7 @@ class Tracker:
         """
         if y == "q":
             self.action = "ping"
-            ping = {"t": t, "y": y, "q": "ping", "a": a}
+            ping = {"t": t, "y": y, "q": "ping", "a": ""}
             print("\nping Query = " + str(ping))
             # print(ping)
             self.broadcast(ping, self_broadcast_enabled=True)
@@ -206,10 +220,12 @@ class Tracker:
             self.action = "find_node"
             Query = {"t": "aa", "y": y, "q": "find_node", "a": a}
             print("\nfind_node Query = " + str(Query))
-            ip, port = a['target']
-            self.send_udp_message(Query, ip, port)
+            print("Query IP: ", self.query_ip)
+            print("Query Port: ", self.query_port)
+            # ip, port = a['target']
+            self.send_udp_message(Query, self.query_ip, self.query_port)
         elif (y == "r"):
-            Response = {"t": "aa", "y": "r", "r": r}
+            Response = {"t": "aa", "y": y, "q": "find_node", "r": r}
             print("\nResponse = " + str(Response))
             self.send_udp_message(Response, self.query_ip, self.query_port)
 
@@ -220,15 +236,16 @@ class Tracker:
         """
         if (y == "q"):
             self.action = "get_peers"
-            Query = {"t": "aa", "y": "q", "q": "get_peers", "a": a}
+            Query = {"t": t, "y": "q", "q": "get_peers", "a": a}
             print("\nget_peers Query = " + str(Query))
             # print(Query)
             self.send_udp_message(Query, self.query_ip, self.query_port)
 
         elif (y == "r"):
-            Response = {"t": "aa", "y": "r", "r": r}
-            print("\nResponse = " + str(Response))
+            Response = {"t": t, "y": "r", "q": "get_peers", "r": r}
+            print("\nget_peers Response = " + str(Response))
             # print(Response)
+            print("Sending to: ", self.query_ip, self.query_port)
             self.send_udp_message(Response, self.query_ip, self.query_port)
 
     def announce_peers(self, t, y, a=None, r=None):
@@ -245,19 +262,22 @@ class Tracker:
             self.send_udp_message(Query, self.query_ip, self.query_port)
 
         elif (y == "r"):
-            Response = {"t": "aa", "y": "r", "r": r}
+            Response = {"t": "aa", "y": "r", "q": "announce_peers", "r": r}
             print("\nannounce_peers Response = " + str(Response))
             # print(Response)
+            # print("Query IP: ", self.query_ip)
+            # print("Query Port: ", self.query_port)
             self.send_udp_message(Response, self.query_ip, self.query_port)
 
     def process_response(self, query):
-
+        #print(query)
         data = dict(query)
-        q = data[b'q'].decode(('utf8'))
+        #print(data)
+        q = data[b'q'].decode('utf-8')
         # y = data[b'y'].decode(('utf8'))
-        print(q)
+        # print("q: ", q)
         infohash = self.torrent.info_hash()
-        infohash = infohash[:20]
+        # infohash = infohash[:20]
 
         if q == "ping":
             # print("Response Query :" + str(query))
@@ -275,13 +295,13 @@ class Tracker:
         elif q == "get_peers":
             Alist = []
 
-            # print("Response get_peers: " + str(query))
+            print("Response get_peers: " + str(query))
             # print(query)
             r = dict(data[b'r'])
 
             token = r[b'token']  # Decode token
             self.token = token.decode(('utf8'))
-            print(self.token)
+            #print("token: ", self.token)
 
             # value = r[b'value']
             # for item in value:
@@ -289,13 +309,21 @@ class Tracker:
             #     node = (item[0].decode(('utf8')), item[1])
             #     Alist.append(node)
 
+            #print("r[id]: ", r[b'id'].decode('utf-8'))
+            #print("r['nodes']: ", r[b'nodes'])
+
             for node in r[b'nodes']:
-                message = {"id": self.nodeID, "target": node}
+                print("Node: ", node.decode('utf-8'))
+                message = {"id": r[b'id'].decode('utf-8'), "target": node.decode('utf-8')}
                 self.find_node("aa", "q", message)
 
-        elif q == "announce_peer":
+        elif q == "announce_peers":
             # message = {"id": self.info_hash}
-            self._routing_table_add(data[b'r']['id'])
+            # print("ADD TO DHT")
+            # print("Add to Routing Table: ", data[b'r'][b'id'].decode('utf-8'))
+            print("Add to Routing Table: ", (self.query_ip, self.query_port))
+            # self._routing_table_add(data[b'r'][b'id'].decode('utf-8'))
+            self._routing_table_add((self.query_ip, self.query_port))
 
     def send_response(self, query):
         data = dict(query)
@@ -314,24 +342,33 @@ class Tracker:
             self.ping(t, "r", None, message)
 
         elif q == "find_node":
-            node = data[b'a']['target']
+            print("Process find_node Query")
+            print("Data: ", data)
+            print("Node: ", data[b'a'][b'target'].decode('utf-8'))
+            node = data[b'a'][b'target'].decode('utf-8')
             message = {"id": self.nodeID, "target": node}
             self.find_node("aa", "r", None, message)
 
         elif q == "get_peers":
             print("get_peers")
             nodes = []
+            # print("Torrent_info: ", self.torrent_info_hash)
+            # print("Raw Data info hash: ", data[b'a'][b'info_hash'])
+            decoded_info_hash = data[b'a'][b'info_hash'].decode('utf-8')
+            # print("Data info hash: ", decoded_info_hash)
 
-            node = (self.query_ip, self.query_port)
-            self._routing_table_add(node)
-
-            if self.torrent_info_hash == data['a']['info_hash']:
+            if self.torrent_info_hash == decoded_info_hash:
+                # print("Hello?")
                 nodes.append(self.nodeID)
+                # print("Append Self: ", self.nodeID)
             for node in self._routing_table:
+                # print("Hello????")
                 if node['info_hash'] == data['a']['info_hash']:
                     nodes.append(node)
-
+                    # print("Append DHT Node")
+            # print("I'm here!")
             message = {"id": self.nodeID, "token": "idk", "nodes": nodes}
+            # print("I'm here now!")
             # print(message)
             # print("\nSending get_peers response")
             # print("\n")
@@ -369,7 +406,7 @@ class Tracker:
         return 0
 
     def run(self):
-        hash = self.server.host + str(self.server.port) + self.id
+        hash = str(self.server.host) + str(self.server.port) + str(self.id)
         sha1 = hashlib.sha1()
         sha1.update(hash.encode('utf8'))
         id = sha1.hexdigest()
@@ -384,3 +421,4 @@ class Tracker:
         threading.Thread(target=self.broadcast_listener).start()
         if self.announce:
             self.ping("aa", "q")
+        print("Tracker DHT Origin -> Info_Hash: ", self.get_DHT(self.torrent.info_hash()))

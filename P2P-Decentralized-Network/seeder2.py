@@ -33,7 +33,7 @@ class Peer:
     In this part of the peer class we implement methods to connect to multiple peers.
     Once the connection is created downloading data is done in similar way as in TCP assigment.
     """
-    SERVER_IP = '127.0.0.3'
+    SERVER_IP = '127.0.0.2'
     TARGET_IP = '127.0.0.1'
     TARGET2_IP = '127.0.0.2'
     TARGET3_IP = '127.0.0.4'
@@ -53,7 +53,7 @@ class Peer:
     #def __init__(self, role=SEEDER, server_ip_address='10.0.0.246'):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
     
     #def __init__(self, role=PEER, server_ip_address=socket.gethostbyname(socket.gethostname())):
-    def __init__(self, role=PEER, server_ip_address=SERVER_IP):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
+    def __init__(self, role=SEEDER, server_ip_address=SERVER_IP):#Run client role = PEER or LEECHER, Don't run client role = SEEDER
 
         """
         Class constructor
@@ -111,18 +111,14 @@ class Peer:
                 Thread(target=self.tracker.run, daemon=False).start()
                 print("Tracker running.....")
 
+                print("Tracker DHT: ", self.tracker.get_DHT(), "Look here")
+                self.swarm = self.tracker.get_DHT()
 
             if self.role != 'seeder':  # Seeder does not need client to download
 
                 self.message.init_bitfield(self.torrent.num_pieces())  # Initialize this bitfield
                 self.file_manager.create_tmp_file()
                 i = 0
-
-                # Peer needs to get the DHT from tracker at the right time so that
-                # the tracker is updated before starting the downloads
-                # Perhaps this could be threaded or put in some while loop? Lemme know what you think. - Chun
-                self.swarm = self.tracker.get_DHT(self.torrent.info_hash())
-                print("Swarm: ", self.swarm)
 
                 print(self.swarm[1][0])
                 port = 5001
