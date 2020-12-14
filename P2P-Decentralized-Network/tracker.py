@@ -20,6 +20,7 @@ class Tracker:
         self.announce = announce
 
         self.DHT_IP = self.server.host
+        self.server_port = self.server.port
 
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -321,9 +322,10 @@ class Tracker:
             # message = {"id": self.info_hash}
             # print("ADD TO DHT")
             # print("Add to Routing Table: ", data[b'r'][b'id'].decode('utf-8'))
-            print("Add to Routing Table: ", (self.query_ip, self.query_port))
+            seeder_server_port = data[b'r'][b'server_port']
+            print("Add to Routing Table: ", (self.query_ip, seeder_server_port))
             # self._routing_table_add(data[b'r'][b'id'].decode('utf-8'))
-            self._routing_table_add((self.query_ip, self.query_port))
+            self._routing_table_add((self.query_ip, seeder_server_port))
 
     def send_response(self, query):
         data = dict(query)
@@ -363,7 +365,7 @@ class Tracker:
                 # print("Append Self: ", self.nodeID)
             for node in self._routing_table:
                 # print("Hello????")
-                if node['info_hash'] == data['a']['info_hash']:
+                if node[b'info_hash'].decode('utf-8') == data[b'a'][b'info_hash'].decode('utf-8'):
                     nodes.append(node)
                     # print("Append DHT Node")
             # print("I'm here!")
@@ -377,7 +379,7 @@ class Tracker:
 
         elif q == "announce_peers":
             print("announce_peer")
-            message = {"id": self.nodeID}
+            message = {"id": self.nodeID, "server_port": self.server_port}
             self.announce_peers("aa", "r", None, message)
 
     def set_total_uploaded(self, peer_id):
@@ -421,4 +423,3 @@ class Tracker:
         threading.Thread(target=self.broadcast_listener).start()
         if self.announce:
             self.ping("aa", "q")
-        print("Tracker DHT Origin -> Info_Hash: ", self.get_DHT(self.torrent.info_hash()))
