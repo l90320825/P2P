@@ -108,8 +108,11 @@ class FileManager:
         :return: VOID
         """
 
-        if not os.path.exists("resources/tmp"):
-            os.makedirs("resources/tmp")
+        #blockDir = self.torrent.path_to_tmp_blocks()
+        #print(blockDir)
+
+        if not os.path.exists("resources/tmp/blocks/"):
+            os.makedirs("resources/tmp/blocks/")
 
 
 
@@ -119,9 +122,9 @@ class FileManager:
 
         try:
 
-            theFile = open("blocks.data", "r+")
+            theFile = open("resources/tmp/blocks/blocks.data", "r+")
         except:
-            theFile = open("blocks.data", "w+")
+            theFile = open("resources/tmp/blocks/blocks.data", "w+")
 
 
         
@@ -130,23 +133,32 @@ class FileManager:
         #print(theFile.seek(0, 2))
         #theFile.seek(0, 2)
         #theFile.write("\n")
-        theblock = ""
+        #theblock = ""
         
 
         pointer = self.pointer(self.hash_info, piece_index, block_index)
         pointer = pointer.decode("UTF-8")
+        theFile.seek(0, 2)
 
 
+        theFile.write(pointer)
+        theFile.write("$$$")
+        theFile.write(block)
+        theFile.write("\n")
+        theFile.close()
+
+        """
         theblock += pointer
         theblock += "$$$"
         theblock += block
         theblock += "  "
         """
+        """
         if theFile.seek(0, 2) == 0:
             truncateSize = len(theblock) * 8 
             theFile.truncate(truncateSize)
         """
-
+        """
         blockPos = (piece_index * 8) + block_index
 
         filePos = len(theblock) * blockPos
@@ -163,6 +175,7 @@ class FileManager:
             theFile.write("$$$")
             theFile.write(block)
             theFile.write("\n")
+        """
             
 
 
@@ -188,7 +201,7 @@ class FileManager:
         #theFile.write(theblock)
         
         #print(theFile.seek(0, 2))
-        theFile.close()
+       
         #print(len(theblock))
         #theFile.flush()
 

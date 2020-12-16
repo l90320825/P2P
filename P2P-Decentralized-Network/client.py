@@ -110,14 +110,17 @@ class Client(object):
 
             """
 
-        while True:  # client is put in listening mode to retrieve data from server.
-            data = self.receive()
-            if not data:
-                break
-            print(data)
+       # while True:  # client is put in listening mode to retrieve data from server.
+         #   data = self.receive()
+         #   if not data:
+          #      break
+         #   print(data)
             # data = self.message.interested
 
             # do something with the data
+        print("Client closing")
+        self.peer.role = 'seeder'
+        print(self.peer.role)
         self.close()
 
     def send(self, data):

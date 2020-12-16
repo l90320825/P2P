@@ -77,7 +77,7 @@ class Uploader:
         
 
         # start with 3 bars
-        #progressbars = ProgressBars(num_bars=1)
+        progressbars = ProgressBars(num_bars=1)
         # set bar #3 to be the total progress
         #progressbars.set_last_bar_as_total_progress(prefix="Total: ")
 
@@ -90,7 +90,7 @@ class Uploader:
 
         while True:
 
-           # progressbars.set_bar_prefix(bar_index=0, prefix="<Piece " + str(index) + " :")
+            progressbars.set_bar_prefix(bar_index=0, prefix="<Piece " + str(index) + " :")
             w = 12.5
             for i in range(8):
             
@@ -103,10 +103,10 @@ class Uploader:
                 package['begin'] = data['begin']
                 package['block'] = block
 
-                print(package)
+                #print(package)
                 self.send(package)            
                 w += 12.5
-               # progressbars.update(bar_index=0, value=w)
+                progressbars.update(bar_index=0, value=w)
 
            # progressbars.finish()
             index += 1

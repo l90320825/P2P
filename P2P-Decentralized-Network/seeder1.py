@@ -68,7 +68,7 @@ class Peer:
         self.server = Server(self.torrent, self.id, server_ip_address,
                              self.SERVER_PORT)  # inherits methods from the server
         self.client = None
-        self.tracker = None  # Tracker(self.server, self.torrent, False) #bool - announce?
+        self.tracker = Tracker(self.server, self.torrent, False) #bool - announce?
         self.swarm = None  # [('127.0.0.1', 5000), ('127.0.0.2', 5000), ('127.0.0.3', 5000)]  # Test
         self.message = Message()  # Initialize bitfield for this peer
         self.file_manager = FileManager(self.torrent, self.id)
@@ -105,15 +105,17 @@ class Peer:
         """
         try:
             if self.server:
+                announce = True
                 if self.role == 'peer':
                     announce = True
                 self.tracker = Tracker(self.server, self.torrent, announce)
-                Thread(target=self.tracker.run, daemon=False).start()
+                #Thread(target=self.tracker.run, daemon=False).start()
                 print("Tracker running.....")
 
                 print("Tracker DHT: ", self.tracker.get_DHT(), "Look here")
-                self.swarm = self.tracker.get_DHT()
+                #self.swarm = self.tracker.get_DHT()
 
+                """
             if self.role != 'seeder':  # Seeder does not need client to download
 
                 self.message.init_bitfield(self.torrent.num_pieces())  # Initialize this bitfield
@@ -127,7 +129,7 @@ class Peer:
                     peer_ip = self.swarm[i][0]
                     self._connect_to_peer(i , port, peer_ip)
                     port += 1
-
+                """
 
 
 

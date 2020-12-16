@@ -33,10 +33,7 @@ class Peer:
     In this part of the peer class we implement methods to connect to multiple peers.
     Once the connection is created downloading data is done in similar way as in TCP assigment.
     """
-    SERVER_IP = '127.0.0.3'
-    TARGET_IP = '127.0.0.1'
-    TARGET2_IP = '127.0.0.2'
-    TARGET3_IP = '127.0.0.4'
+    SERVER_IP = '127.0.0.2'
     NUM_SERVER = 2
     SERVER_PORT = 5000
     CLIENT_MIN_PORT_RANGE = 5001
@@ -69,7 +66,7 @@ class Peer:
                              self.SERVER_PORT)  # inherits methods from the server
         self.client = None
         self.tracker = None  # Tracker(self.server, self.torrent, False) #bool - announce?
-        self.swarm = None  # [('127.0.0.1', 5000), ('127.0.0.2', 5000), ('127.0.0.3', 5000)]  # Test
+        self.swarm = []  # [('127.0.0.1', 5000), ('127.0.0.2', 5000), ('127.0.0.3', 5000)]  # Test
         self.message = Message()  # Initialize bitfield for this peer
         self.file_manager = FileManager(self.torrent, self.id)
         self.progressbars = ProgressBars(num_bars=self.NUM_SERVER)
@@ -107,15 +104,49 @@ class Peer:
             if self.server:
                 if self.role == 'peer':
                     announce = True
-                self.tracker = Tracker(self.server, self.torrent, announce)
-                Thread(target=self.tracker.run, daemon=False).start()
+                self.tracker = Tracker(self, self.server, self.torrent, announce)
+                t1 = Thread(target=self.tracker.run, daemon=False)
+                t1.start()
                 print("Tracker running.....")
 
+                info_hash = self.torrent.info_hash()
 
+                t1.join()
+
+               
+
+
+
+
+                
             if self.role != 'seeder':  # Seeder does not need client to download
+                
+               # while len(self.swarm) < 1:
+                    
+                    #print("Tracker DHT: ", self.tracker.get_DHT(info_hash), "Look here")
+                
+                print("Searching seeder")
+                time.sleep(5)
+
+
+                while len(self.swarm) < 1:
+                    print("Searching seeder")
+                    time.sleep(10)
+
+
+
 
                 self.message.init_bitfield(self.torrent.num_pieces())  # Initialize this bitfield
                 self.file_manager.create_tmp_file()
+
+                try:
+                    size = len(self.swarm[info_hash])
+
+                except:
+                    size = len(self.swarm)
+                print("size", size)
+                self.progressbars = ProgressBars(num_bars=size)
+
                 i = 0
 
                 # Peer needs to get the DHT from tracker at the right time so that
@@ -124,20 +155,21 @@ class Peer:
                 self.swarm = self.tracker.get_DHT(self.torrent.info_hash())
                 print("Swarm: ", self.swarm)
 
-                print(self.swarm[1][0])
-                port = 5001
+               # print(self.swarm[1][0])
+                port = self.CLIENT_MIN_PORT_RANGE
                
-                for i in range(self.NUM_SERVER):
+                for i in range(size):
                     peer_ip = self.swarm[i][0]
                     self._connect_to_peer(i , port, peer_ip)
                     port += 1
+               
 
 
 
 
 
 
-
+                
 
 
 
@@ -192,6 +224,7 @@ class Peer:
         :return: VOID
         """
         try:
+           # print("threadId", threadID)
             self.client = Client(self, threadID, self.message, self.torrent, 1, self.tracker, str(self.id), peer_ip_address,
                                      self.server_ip_address, client_port_to_bind)
             Thread(target=self.client.run, daemon=False).start()
