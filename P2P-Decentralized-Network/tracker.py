@@ -21,6 +21,7 @@ class Tracker:
         self.announce = announce
 
         self.DHT_IP = self.server.host
+        self.server_port = self.server.port
 
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -368,7 +369,7 @@ class Tracker:
                 # print("Append Self: ", self.nodeID)
             for node in self._routing_table:
                 # print("Hello????")
-                if node['info_hash'] == data['a']['info_hash']:
+                if node[b'info_hash'].decode('utf-8') == data[b'a'][b'info_hash'].decode('utf-8'):
                     nodes.append(node)
                     # print("Append DHT Node")
             # print("I'm here!")
@@ -382,7 +383,7 @@ class Tracker:
 
         elif q == "announce_peers":
             print("announce_peer")
-            message = {"id": self.nodeID}
+            message = {"id": self.nodeID, "server_port": self.server_port}
             self.announce_peers("aa", "r", None, message)
 
     def set_total_uploaded(self, peer_id):

@@ -112,8 +112,13 @@ class Peer:
                 #Thread(target=self.tracker.run, daemon=False).start()
                 print("Tracker running.....")
 
+<<<<<<< HEAD
                 print("Tracker DHT: ", self.tracker.get_DHT(), "Look here")
                 #self.swarm = self.tracker.get_DHT()
+=======
+                # print("Tracker DHT: ", self.tracker.get_DHT(self.torrent.info_hash()), "Look here")
+                # self.swarm = self.tracker.get_DHT(self.torrent.info_hash())
+>>>>>>> 2caa4a27e9160a45aaaa90ec062ec6c0b9f461fb
 
                 """
             if self.role != 'seeder':  # Seeder does not need client to download
