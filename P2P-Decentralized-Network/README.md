@@ -2,15 +2,33 @@
 
 Please use this README file to provide the following documentation for this project:
 
-* Your name and student id
-    * Chun Tat Chan | 916770782
-    * John To | 917507752
-    * Student Github Usernames: l90320825 | chuntatchan
-* General description of the project (a few sentences)
-* If you used external Python modules/libraries. Provide a requirements.txt file  
-* Python version and compatibility issues (if any)
-* Clear and specific instructions about how to run your project. If your project does not run or contains errors, you'll get a 0 in the project no matter how much work you put on it. So, test your code properly and make sure that it runs without errors.
-* A few sentences about all the challenges you found during the implementation of this project and how you overcame them. Please be honest here. 
+| Student Name  | Student ID | Github Usernames |
+| :-----------  | :--------: | :--------------- |
+| Chun Tat Chan | 916770782  | chuntatchan      |
+| John To       | 917507752  | l90320825        |
+
+### General description of the project (a few sentences)
+<p>
+	In this programming project, we, Chun Tat Chan and John To, implemented a decentralized peer-to-peer network architecture (P2P), including the basic implementation of the BitTorrent protocol (BTP). The purpose of this programming project was the gain an in depth understanding of the process behind the archiecture of a decentralized peer-to-peer network as the cumulation of all the material we learned in class.
+</p>
+
+##### If you used external Python modules/libraries. Provide a requirements.txt file
+* No external python modules/libraries used.
+
+##### Python version and compatibility issues (if any)
+* Shouldn't have compatibility issues, but just in case we used Python version: 3.8.2 (John) and 3.8.3 (Chun Tat).
+
+##### Clear and specific instructions about how to run your project. If your project does not run or contains errors, you'll get a 0 in the project no matter how much work you put on it. So, test your code properly and make sure that it runs without errors.
+<ol>
+	<li> Clone the repo using this command: `git clone https://github.com/l90320825/P2P.git` </li>
+	<li> After cloning the repo, run: `pip install requirements.txt` to install all the missing modules/libraries. </li>
+	<li> If using one machine: please run seeder1.py and seeder2.py in different command prompts using these commands: `python seeder1.py` and `python seeder2.py` in the P2P-Decentralized-Network folder. Then run peer.py using: `python peer.py` in a third command prompt. If using multiple machines, please run seeder1.py and seeder2.py in different machines, then peer.py on a third machine.
+	</li>
+	<li> With this, you should now see the peer's tracker finding seeders and starting the download process. </li>
+</ol>
+
+##### A few sentences about all the challenges you found during the implementation of this project and how you overcame them. Please be honest here.
+* In the beginning, we felt fairly confident about this project as we felt like we conceptually understood the project. However, when it came to coding it using python; many implementation details went over our heads. Some of the challenges we faced during this project were figuring out how to implement multiple clients to download pieces from multiple servers. Despite receiving lots of help on Slack and in Class, the implementation details were still fairly difficult to grasp and took a lot of time. Threading clients that preform the file write and read were quite challenging as well. Communication between uploader and downloader took lots of time as well. The tracker from the lab was not preforming its function, thus we had to spend some time fixing it and having it properly update the DHT routing tables. Overall, it was just a lot of debugging through writing proper print statements everywhere and finding out which lines of code are causing the code to fail and fixing them. After implementing everything, we have now gained an in depth understanding of how a decentralized peer-to-peer network functions.
 
 ## Note that failure to provide the above docs will result in a 30% deduction in your final grade for this project. 
 
