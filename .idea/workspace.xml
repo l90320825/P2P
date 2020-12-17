@@ -4,7 +4,8 @@
     <list default="true" id="10d1dc1a-96a0-4791-823d-f0727536b307" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/peer.py" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/peer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P2P-Decentralized-Network/resources/tmp/blocks/blocks.data" beforeDir="false" afterPath="$PROJECT_DIR$/P2P-Decentralized-Network/resources/tmp/blocks/blocks.data" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

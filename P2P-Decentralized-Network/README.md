@@ -22,7 +22,7 @@ Please use this README file to provide the following documentation for this proj
 <ol>
 	<li> Clone the repo using this command: `git clone https://github.com/l90320825/P2P.git` </li>
 	<li> After cloning the repo, run: `pip install requirements.txt` to install all the missing modules/libraries. </li>
-	<li> If using one machine: please run seeder1.py and seeder2.py in different command prompts using these commands: `python seeder1.py` and `python seeder2.py` in the P2P-Decentralized-Network folder. Then run peer.py using: `python peer.py` in a third command prompt. If using multiple machines, please run seeder1.py and seeder2.py in different machines, then peer.py on a third machine.
+	<li> Please run peer.py using this command: `python peer.py`. First run two seeders in different command prompts using different SERVER_IP. You can adjust SERVER_IP in peer.py on line 36 and change role=SEEDER on line 53. Lastly run a peer in a different command prompt using a different SERVER_IP on line 36 and change role=PEER on line 53.
 	</li>
 	<li> With this, you should now see the peer's tracker finding seeders and starting the download process. </li>
 </ol>
